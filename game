@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Typing Game</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="./style.css"/>
+    <script src="./script.js" defer></script>
+  </head>
+  <body>
+    <h1>Typing game!</h1>
+    <p>Practice your typing skills with a quote from Sherlock Holmes. Click **start** to begin!</p>
+    <p id="quote"></p><!-- This displays our quote -->
+    <p id="message"></p><!-- This displays status message -->
+    <div>
+      <input type="text" aria-label="current word" id="typed-value" />
+      <button type="button" id="start">Start</button>
+    </div>
+  </body>
+</html>
+let quotes = [
+  'It does not do to dwell on dreams and forget to live',
+  'Nothing clears up a case so much as stating it to another person',
+  'Education never ends, Watson. Life is a series of learning and learning until the day we die.'
+];
+
+let words = [];
+let wordIndex = 0;
+let startTime = Date.now();
+
+const quoteElement = document.getElementById('quote');
+const messageElement = document.getElementById('message');
+const typedValueElement = document.getElementById('typed-value');
+const startButton = document.getElementById('start');
+
+startButton.addEventListener('click', startGame);
+
+function startGame() {
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+  words = randomQuote.split(' ');
+  quoteElement.textContent = randomQuote;
+  typedValueElement.value = '';
+  wordIndex = 0;
+  startTime = Date.now();
+  messageElement.textContent = 'Go!';
+}
+
+typedValueElement.addEventListener('input', checkInput);
+
+function checkInput() {
+  const typedWord = typedValueElement.value.trim();
+  const currentWord = words[wordIndex];
+  if (typedWord === currentWord) {
+    wordIndex++;
+    typedValueElement.value = '';
+    if (wordIndex === words.length) {
+      const endTime = Date.now();
+      const timeTaken = (endTime - startTime) / 1000;
+      messageElement.textContent = `Well done! You typed the quote in ${timeTaken} seconds.`;
+    }
+  }
+}
